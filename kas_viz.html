@@ -19,10 +19,9 @@
 </div>
 <!-- Create a div where the graph will take place style="margin-bottom: 10px"-->
 <div id="my_dataviz"></div>
-​
-​
+
 <script>
-​
+
 // set the dimensions and margins of the graph
 var margin = {top: 10, right: 30, bottom: 30, left: 30},
     width = 460 - margin.left - margin.right,
@@ -35,14 +34,14 @@ var margin = {top: 10, right: 30, bottom: 30, left: 30},
       .append("g")
         .attr("transform",
               "translate(" + (margin.left + 30) + "," + margin.top + ")")
-​
+
 //Read the data
 d3.csv("https://raw.githubusercontent.com/tmcarvalho/d3viz/main/UvsR.csv", function(data) {
 // original_ds,df,RiscoOriginal,RiscoTransformado,UtilOriginal,UtilTransformado,model
 // models "Logistic Regression" "Random Forest" "XGBoost"
 // d3.csv("https://cloud.tekprivacy.pt/index.php/s/gFgqHwDBSkdWKd3/download", function(data) {
 //d3.csv("C:\Users\35191\Desktop\UvsR.csv", function(data) {
-​
+
   // Add X axis
   var x = d3.scaleLinear()
     .domain([0, 1])
@@ -52,7 +51,7 @@ d3.csv("https://raw.githubusercontent.com/tmcarvalho/d3viz/main/UvsR.csv", funct
     .attr("transform", "translate(0," + (height-35) + ")")
     .call(d3.axisBottom(x))
     .attr("opacity", "1")
-​
+
 	//legend axis X
   svg.append("text")
     .attr("class", "x label")
@@ -60,8 +59,8 @@ d3.csv("https://raw.githubusercontent.com/tmcarvalho/d3viz/main/UvsR.csv", funct
     .attr("x", 230)
     .attr("y", height)
     .text("Utilidade");
-​
-​
+
+
   // Add a tooltip div. Here I define the general feature of the tooltip: stuff that do not depend on the data point.
   // Its opacity is set to 0: we don't see it by default.
   var tooltip = d3.select("#my_dataviz")
@@ -75,21 +74,21 @@ d3.csv("https://raw.githubusercontent.com/tmcarvalho/d3viz/main/UvsR.csv", funct
     .style("border-radius", "5px")
     .style("padding", "10px")
 	
-​
+
   // A function that change this tooltip when the user hover a point.
   // Its opacity is set to 1: we can now see it. Plus it set the text and position of tooltip depending on the datapoint (d)
   var mouseover = function(d) {
     tooltip
       .style("opacity", 1)
   }
-​
+
   var mousemove = function(d) {
     tooltip
       .html("Dataset transformation: " + d.df)
       //.style("left", (d3.mouse(this)[0]+90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
       //.style("top", (d3.mouse(this)[1]) + "px")
   }
-​
+
   // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
   var mouseleave = function(d) {
     tooltip
@@ -105,7 +104,7 @@ d3.csv("https://raw.githubusercontent.com/tmcarvalho/d3viz/main/UvsR.csv", funct
   svg.append("g")
 	.attr("class", "myYaxis")
     .call(d3.axisLeft(y));
-​
+
 	svg.append("text")
     .attr("class", "y label")
     .attr("text-anchor", "end")
@@ -113,7 +112,7 @@ d3.csv("https://raw.githubusercontent.com/tmcarvalho/d3viz/main/UvsR.csv", funct
     .attr("y", -45)
     .attr("transform", "rotate(-90)")
     .text("Risco de Privacidade");
-​
+
   // Add dots
   svg.append('g')
     .selectAll("dot")
@@ -134,7 +133,7 @@ d3.csv("https://raw.githubusercontent.com/tmcarvalho/d3viz/main/UvsR.csv", funct
 	.on("mouseover", mouseover )
 	.on("mousemove", mousemove )
 	.on("mouseleave", mouseleave )
-​
+
   // new X axis
   /*x.domain([0, 10000])"Random Forest" "XGBoost" 
   svg.select(".myXaxis")
@@ -175,24 +174,24 @@ d3.csv("https://raw.githubusercontent.com/tmcarvalho/d3viz/main/UvsR.csv", funct
     .duration(2000)
     .attr("opacity", "1")
     .call(d3.axisLeft(y));*/
-​
+
 	function updatePlot() {
-​
+
 	// Get the value of the button
 	xlowlim = document.getElementById('buttonXlowlim').value / 100
 	xhighlim = document.getElementById('buttonXhighlim').value / 100
 	// Get the value of the button
 	ylowlim = document.getElementById('buttonYlowlim').value / 100
 	yhighlim = document.getElementById('buttonYhighlim').value / 100
-​
+
 	// Update X axis
 	x.domain([xlowlim,xhighlim])
 	svg.select(".myXaxis").transition().duration(1000).call(d3.axisBottom(x))
-​
+
 	// Update X axis
 	y.domain([ylowlim,yhighlim])
 	svg.select(".myYaxis").transition().duration(1000).call(d3.axisLeft(y))
-​
+
 	// Update chart
 	svg.selectAll("circle")
 	   .data(data)
@@ -201,12 +200,12 @@ d3.csv("https://raw.githubusercontent.com/tmcarvalho/d3viz/main/UvsR.csv", funct
 	   .attr("cx", function (d) { return x(d.UtilTransformado); } )
 	   .attr("cy", function (d) { return y(d.RiscoTransformado); } )
 	}
-​
+
 	//d3.select("#buttonXlowlim").on("input", updatePlot )
 	d3.select("#refresh").on("click", updatePlot )
 	d3.select("#boriginal").on("click", originalPlot	)
 	d3.select("#btransfor").on("click", transformedPlot )
-​
+
 })
-​
+
 </script>
